@@ -49,7 +49,7 @@ def main():
     for m in merged:
         v = m.get('views','0')
         num = float(re.sub(r'[^0-9.]','', v.replace('K','e3').replace('M','e6')) or 0)
-        m['heatscore'] = int(num)
+        m['heatscore'] = int(num) 
     merged = sorted(merged, key=lambda x: x['heatscore'], reverse=True)[:50]
     Path('public/leaderboard.json').write_text(json.dumps(merged, indent=2))
 
