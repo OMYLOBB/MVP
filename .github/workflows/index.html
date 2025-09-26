@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>UG Radar MVP</title>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50 p-6">
+  <div id="root"></div>
+  <script type="text/babel">
+    const {useEffect, useState} = React;
+    function App() {
+      const [list, setList] = useState([]);
+      useEffect(() => {
+        fetch('/MVP/leaderboard.json')
+          .then(r => r.json())
+          .then(setList)
+          .catch(() => {});
+      }, []);
+      return (
+        <div className="max-w-xl mx-auto">
+          <h1 className="text-2xl font-bold mb-4">Uganda Radar – Hot 20</h1>
+          <ol className="list-decimal ml-6 space-y-1">
+            {list.slice(0,20).map((t, i) => (
+              <li key={i}>
+                <a className="text-blue-600 underline" href={t.url} target="_blank" rel="noreferrer">
+                  {t.title}
+                </a>
+                <span className="ml-2 text-gray-500">({t.heatscore})</span>
+              </li>
+            ))}
+          </ol>
+          <p className="text-xs text-gray-400 mt-6">Updates every 6 h · MVP</p>
+        </div>
+      );
+    }
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
