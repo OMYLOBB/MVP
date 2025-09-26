@@ -26,7 +26,7 @@
 async function loadData(){
   const ul=document.getElementById('list');
   ul.innerHTML='<li class="load">Loading…</li>';
-  const boom='https://api.allorigins.win/raw?url=https%3A%2F%2Fmobile.boomplay.com%2Fapi%2Fv1%2Ftrending%3Fcountry%3DUG%26type%3D1';
+  const boom='https://cors-proxy.fringe.zone/https://mobile.boomplay.com/api/v1/trending?country=UG&type=1';
   try{
     const r=await fetch(boom);
     const data=await r.json();
