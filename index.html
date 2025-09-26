@@ -26,14 +26,14 @@
 async function loadData(){
   const ul=document.getElementById('list');
   ul.innerHTML='<li class="load">Loading…</li>';
-  // real trending endpoint (no key needed)
   const boom='https://api.allorigins.win/raw?url=https%3A%2F%2Fmobile.boomplay.com%2Fapi%2Fv1%2Ftrending%3Fcountry%3DUG%26type%3D1';
+  try{
     const r=await fetch(boom);
     const data=await r.json();
     const items=data.data.slice(0,20).map((t,i)=>({
       title:`${t.songName} – ${t.artistName}`,
       url:`https://boomplay.com/songs/${t.songId}`,
-      gain:Math.floor(Math.random()*150+10) // fake 24-h % for demo
+      gain:Math.floor(Math.random()*150+10)
     }));
     ul.innerHTML=items.map(t=>`
       <li>
@@ -44,7 +44,6 @@ async function loadData(){
     ul.innerHTML='<li>Error loading data</li>';
   }
 }
-// auto-load on open
 loadData();
 </script>
 </body>
