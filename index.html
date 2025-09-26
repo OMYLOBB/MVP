@@ -15,7 +15,7 @@
     function App() {
       const [list, setList] = useState([]);
       useEffect(() => {
-       fetch('/MVP/public/leaderboard.json')
+       fetch('https://raw.githubusercontent.com/OMYLOBB/MVP/main/public/leaderboard.json')
           .then(r => r.json())
           .then(setList)
           .catch(() => {});
