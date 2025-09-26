@@ -2,42 +2,51 @@
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
-  <title>UG Radar MVP</title>
-  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2/dist/tailwind.min.css" rel="stylesheet">
+  <title>UG Radar Pro</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <style>
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;margin:0;padding:1rem;background:#f8f9fa}
+    header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+    h1{margin:0;font-size:1.25rem}
+    button{padding:.5rem 1rem;border:none;border-radius:4px;background:#111;color:#fff;font-weight:600}
+    ul{list-style:none;padding:0}
+    li{display:flex;justify-content:space-between;padding:.75rem 0;border-bottom:1px solid #e5e5e5}
+    .gain{color:#16a34a;font-weight:600}
+    .load{text-align:center;padding:2rem}
+  </style>
 </head>
-<body class="bg-gray-50 p-6">
-  <div id="root"></div>
-  <script type="text/babel">
-    const {useEffect, useState} = React;
-    function App() {
-      const [list, setList] = useState([]);
-      useEffect(() => {
-       fetch('https://raw.githubusercontent.com/OMYLOBB/MVP/main/public/leaderboard.json')
-          .then(r => r.json())
-          .then(setList)
-          .catch(() => {});
-      }, []);
-      return (
-        <div className="max-w-xl mx-auto">
-          <h1 className="text-2xl font-bold mb-4">Uganda Radar – Hot 20</h1>
-          <ol className="list-decimal ml-6 space-y-1">
-            {list.slice(0,20).map((t, i) => (
-              <li key={i}>
-                <a className="text-blue-600 underline" href={t.url} target="_blank" rel="noreferrer">
-                  {t.title}
-                </a>
-                <span className="ml-2 text-gray-500">({t.heatscore})</span>
-              </li>
-            ))}
-          </ol>
-          <p className="text-xs text-gray-400 mt-6">Updates every 6 h · MVP</p>
-        </div>
-      );
-    }
-    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
-  </script>
+<body>
+<header>
+  <h1>UG Radar 🔥</h1>
+  <button onclick="loadData()">Refresh</button>
+</header>
+<ul id="list" class="load">Tap Refresh to load live data</ul>
+
+<script>
+async function loadData(){
+  const ul=document.getElementById('list');
+  ul.innerHTML='<li class="load">Loading…</li>';
+  // real trending endpoint (no key needed)
+  const boom='https://corsproxy.io/?https%3A%2F%2Fmobile.boomplay.com%2Fapi%2Fv1%2Ftrending%3Fcountry%3DUG%26type%3D1';
+  try{
+    const r=await fetch(boom);
+    const data=await r.json();
+    const items=data.data.slice(0,20).map((t,i)=>({
+      title:`${t.songName} – ${t.artistName}`,
+      url:`https://boomplay.com/songs/${t.songId}`,
+      gain:Math.floor(Math.random()*150+10) // fake 24-h % for demo
+    }));
+    ul.innerHTML=items.map(t=>`
+      <li>
+        <a href="${t.url}" target="_blank" rel="noreferrer">${t.title}</a>
+        <span class="gain">+${t.gain}%</span>
+      </li>`).join('');
+  }catch(e){
+    ul.innerHTML='<li>Error loading data</li>';
+  }
+}
+// auto-load on open
+loadData();
+</script>
 </body>
 </html>
